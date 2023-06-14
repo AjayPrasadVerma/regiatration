@@ -86,6 +86,37 @@ app.post("/signup", async (req, res) => {
   }
 });
 
+app.post("/login", async (req, res) => {
+  const Username = req.body.username;
+  const password = req.body.password;
+
+  try {
+    const foundData = await userModal.findOne({ username: Username });
+
+    if (foundData) {
+      const isMatch = await bcrypt.compare(password, foundData.password);
+
+      const token = await foundData.generateAuthToken();
+
+      res.cookie("jwt", token, { maxAge: 30 * 60 * 1000 });
+
+      if (isMatch) {
+        res.redirect("/registration");
+
+        req.session.currentUser = foundData.username;
+      } else {
+        req.session.logMsg = "Incorrect Password!";
+        res.redirect("/");
+      }
+    } else {
+      req.session.logMsg = "user does not exists!";
+      res.redirect("/");
+    }
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
 app.listen(port, () => {
   console.log(`we are listening at port number ${port}`);
 });
