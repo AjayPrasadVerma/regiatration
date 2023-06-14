@@ -1,0 +1,197 @@
+<form
+  onsubmit="return handleSubmitEvent()"
+  id="add-user"
+  action="/api/user"
+  method="post"
+>
+  <div class="inline-input">
+    <div class="form-group">
+      <label for="fname" class="test-light required">First Name</label>
+      <input
+        type="text"
+        name="fname"
+        value=""
+        id="fname"
+        oninput="this.className='' "
+        placeholder="Ex:- Stive"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="lname" class="test-light required">Last-Name</label>
+      <input
+        type="text"
+        name="lname"
+        value=""
+        oninput="this.className='' "
+        id="lname"
+        placeholder="Ex:-Smith"
+      />
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="email" class="test-light">Email</label>
+    <input
+      type="text"
+      name="userEmail"
+      value="example@gmail.com"
+      placeholder="email"
+    />
+  </div>
+
+  <div class="inline-input">
+    <div class="form-group">
+      <label class="required" for="country" class="test-light">Country</label>
+      <select
+        id="country"
+        name="country"
+        style="margin-top: 6px"
+        onselect="this.className='' "
+      >
+        <option value="" selected>Country</option>
+        <option value="india">India</option>
+        <option value="bangladesh">Bangladesh</option>
+        <option value="nepal">Nepal</option>
+        <option value="russia">Russia</option>
+        <option value="sri-lanka">Sri Lanka</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label class="required" for="state" class="test-light">State</label>
+      <select
+        id="state"
+        name="state"
+        style="margin-top: 6px"
+        onselect="this.className='' "
+      >
+        <option value="" selected>State</option>
+        <option value="india">India</option>
+        <option value="bangladesh">Bangladesh</option>
+        <option value="nepal">Nepal</option>
+        <option value="russia">Russia</option>
+        <option value="sri-lanka">Sri Lanka</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="inline-input">
+    <div class="form-group">
+      <label class="required" for="city" class="test-light">City</label>
+      <select
+        id="city"
+        name="city"
+        style="margin-top: 6px"
+        onselect="this.className='' "
+      >
+        <option value="" selected>Country</option>
+        <option value="india">Ranchi</option>
+        <option value="bangladesh">Patna</option>
+        <option value="nepal">Mumbai</option>
+        <option value="russia">Delhi</option>
+        <option value="sri-lanka">Punjab</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label class="required" for="dob" onselect="this.className='' "
+        >Date Of Birth</label
+      >
+      <input type="date" class="input" id="dob" name="dob" autocomplete="off" />
+    </div>
+  </div>
+
+  <div class="inline-input">
+    <div class="form-group">
+      <label for="age" class="test-light">Age</label>
+      <input type="text" name="age" value="25" disabled />
+    </div>
+
+    <div class="radio-group-container">
+      <div class="form-group">
+        <div>
+          <label for="gender" class="test-light required">Gender</label>
+        </div>
+
+        <div class="radio inline">
+          <input
+            type="radio"
+            name="gender"
+            id="radio-2"
+            value="Male"
+            onchange="this.className='' "
+          />
+          <label for="radio-2" class="radio-label">Male</label>
+        </div>
+        <div class="radio inline">
+          <input
+            type="radio"
+            name="gender"
+            id="radio-3"
+            value="Female"
+            onchange="this.className='' "
+          />
+          <label for="radio-3" class="radio-label">Female</label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p id="invalid"></p>
+  <div class="form-group">
+    <button type="submit" class="btn test-dark update">Save</button>
+  </div>
+</form>
+
+<script>
+  function handleSubmitEvent() {
+    if (validate()) {
+      if (
+        confirm(
+          "Do you really want to submit the application!\nPlease Verify details before submit"
+        )
+      ) {
+        alert("Your application submitted successfully!");
+        return true;
+      }
+    } else {
+      return false;
+    }
+  }
+
+  function validate() {
+    let valid = true;
+    let invalid = document.getElementById("invalid");
+    let x = document.getElementsByTagName("input");
+    let y = document.getElementsByTagName("select");
+    let z = document.getElementsByClassName("test-light");
+    let fname = document.getElementById("fname");
+    let lname = document.getElementById("lname");
+
+    let allField = [...x, ...y, ...z];
+
+    for (i = 0; i < allField.length; i++) {
+      if (allField[i].value == "") {
+        allField[i].className += " invalid";
+        invalid.innerText = "All field are required!";
+        valid = false;
+      }
+    }
+
+    const regex = /^[A-Za-z]+$/;
+
+    if (!regex.test(fname.value) && fname.value !== "") {
+      fname.className += " invalid";
+      invalid.innerText = "Please enter valid name!";
+      valid = false;
+    }
+
+    if (!regex.test(lname.value) && fname.value !== "") {
+      lname.className += " invalid";
+      invalid.innerText = "Please enter valid name!";
+      valid = false;
+    }
+
+    return valid ? true : false;
+  }
+</script>
