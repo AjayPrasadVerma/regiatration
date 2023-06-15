@@ -1,7 +1,7 @@
 <form
   onsubmit="return handleSubmitEvent()"
   id="add-user"
-  action="/api/user"
+  action="/user"
   method="post"
 >
   <div class="inline-input">
@@ -32,13 +32,9 @@
 
   <div class="form-group">
     <label for="email" class="test-light">Email</label>
-    <input
-      type="text"
-      name="userEmail"
-      value="example@gmail.com"
-      placeholder="email"
-    />
+    <input type="text" name="userEmail" value="<%= email %>" disabled />
   </div>
+  <input type="hidden" name="email" value="<%= email %>" />
 
   <div class="inline-input">
     <div class="form-group">
@@ -47,7 +43,7 @@
         id="country"
         name="country"
         style="margin-top: 6px"
-        onselect="this.className='' "
+        oninput="this.className='' "
       >
         <option value="" selected>Country</option>
       </select>
@@ -59,7 +55,7 @@
         id="state"
         name="state"
         style="margin-top: 6px"
-        onselect="this.className='' "
+        oninput="this.className='' "
       >
         <option value="" selected>State</option>
       </select>
@@ -73,24 +69,29 @@
         id="city"
         name="city"
         style="margin-top: 6px"
-        onselect="this.className='' "
+        oninput="this.className='' "
       >
         <option value="" selected>City</option>
       </select>
     </div>
 
     <div class="form-group">
-      <label class="required" for="dob" onselect="this.className='' "
-        >Date Of Birth</label
-      >
-      <input type="date" class="input" id="dob" name="dob" autocomplete="off" />
+      <label class="required" for="dob">Date Of Birth</label>
+      <input
+        type="date"
+        class="input"
+        id="dob"
+        name="dob"
+        oninput="this.className='' "
+      />
     </div>
   </div>
 
   <div class="inline-input">
     <div class="form-group">
       <label for="age" class="test-light">Age</label>
-      <input type="text" name="age" value="25" disabled />
+      <input type="text" id="aged" name="age" disabled />
+      <input type="hidden" name="age" id="ageh" />
     </div>
 
     <div class="radio-group-container">
@@ -152,6 +153,7 @@
     let z = document.getElementsByClassName("test-light");
     let fname = document.getElementById("fname");
     let lname = document.getElementById("lname");
+    const dobInput = document.getElementById("dob");
 
     let allField = [...x, ...y, ...z];
 
@@ -169,14 +171,59 @@
       fname.className += " invalid";
       invalid.innerText = "Please enter valid name!";
       valid = false;
+      return;
     }
 
     if (!regex.test(lname.value) && fname.value !== "") {
       lname.className += " invalid";
       invalid.innerText = "Please enter valid name!";
       valid = false;
+      return;
+    }
+
+    const selectedDate = new Date(dobInput.value);
+    console.log(selectedDate);
+    const currentDate = new Date();
+    const fourteenYearsAgo = new Date(
+      currentDate.getFullYear() - 14,
+      currentDate.getMonth(),
+      currentDate.getDate()
+    );
+
+    if (selectedDate > fourteenYearsAgo) {
+      dobInput.className += " invalid";
+      invalid.textContent = "Age must be older than 14.";
+      valid = false;
+      return;
+    } else {
+      invalid.textContent = "";
+      valid = true;
     }
 
     return valid ? true : false;
   }
+
+  let dobInput = document.getElementById("dob");
+
+  dobInput.addEventListener("change", () => {
+    const ageh = document.getElementById("ageh");
+    const aged = document.getElementById("aged");
+
+    const selectedDate = new Date(dobInput.value);
+    const currentDate = new Date();
+
+    const age = currentDate.getFullYear() - selectedDate.getFullYear();
+
+    if (selectedDate > currentDate) {
+      dobInput.className += " invalid";
+      invalid.textContent = "Invalid date of birth.";
+    } else if (age < 14) {
+      dobInput.className += " invalid";
+      invalid.textContent = "Age must be older than 14.";
+    } else {
+      invalid.textContent = "";
+      ageh.value = age;
+      aged.value = age;
+    }
+  });
 </script>

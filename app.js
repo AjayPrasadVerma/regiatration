@@ -6,6 +6,7 @@ const connectBD = require("./models/config");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const userModal = require("./models/userModel");
+const addUserModel = require("./models/addUserModel");
 const bcrypt = require("bcryptjs");
 const auth = require("./middleware/auth");
 const path = require("path");
@@ -52,7 +53,7 @@ app.get("/signup", (req, res) => {
   res.render("SignUp", { message: req.session.sigMessage });
 });
 
-app.get("/registration", async (req, res) => {
+app.get("/registration", auth, async (req, res) => {
   try {
     const indiaStateList = await india.find();
     const russiaStateList = await russia.find();
@@ -76,7 +77,14 @@ app.get("/registration", async (req, res) => {
       ...englandStateList,
     ];
 
-    res.render("registration_form", { countryData: allCountryState });
+    if (req.user) {
+      res.render("registration_form", {
+        countryData: allCountryState,
+        email: req.session.currentUser,
+      });
+    } else {
+      res.redirect("/");
+    }
   } catch (err) {
     console.log(err);
   }
@@ -137,9 +145,8 @@ app.post("/login", async (req, res) => {
       res.cookie("jwt", token, { maxAge: 30 * 60 * 1000 });
 
       if (isMatch) {
-        res.redirect("/registration");
-
         req.session.currentUser = foundData.username;
+        res.redirect("/registration");
       } else {
         req.session.logMsg = "Incorrect Password!";
         res.redirect("/");
@@ -149,6 +156,28 @@ app.post("/login", async (req, res) => {
       res.redirect("/");
     }
   } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
+app.post("/user", async (req, res) => {
+  const userDetails = new addUserModel({
+    first_name: req.body.fname,
+    last_name: req.body.lname,
+    email: req.body.email,
+    country: req.body.country,
+    state: req.body.state,
+    city: req.body.city,
+    date_of_birth: req.body.dob,
+    age: req.body.age,
+    gender: req.body.gender,
+  });
+
+  try {
+    await userDetails.save();
+    res.redirect("/");
+  } catch (err) {
+    console.log(err);
     res.status(400).send(err);
   }
 });
