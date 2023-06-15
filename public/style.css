@@ -266,6 +266,12 @@ a:hover {
 
 /* User  details*/
 
+.info-container {
+  margin: auto;
+  width: 350px;
+  padding: 10px 5px 10px 50px;
+}
+
 .user-img {
   text-align: center;
 }
@@ -274,7 +280,7 @@ a:hover {
   font-weight: bold;
   font-size: 1.2em;
   display: inline-block;
-  width: 110px;
+  width: 150px;
 }
 
 .info {

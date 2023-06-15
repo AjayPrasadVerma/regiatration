@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('./partials/header'); %>
+    <title>User Details</title>
+  </head>
+
+  <body>
+    <h1 style="background-color: #ed9b2f; padding: 20px">User Details</h1>
+
+    <div class="link link-btn">
+      <a class="l2" href="/logout">Logout</a>
+      <a class="l3" href="/logoutAll">Logout from all device</a>
+    </div>
+
+    <div class="form-container">
+      <div id="sub-container" style="margin-top: 0px">
+        <div class="user-img">
+          <img
+            src="https://ajayprasadverma.github.io/ajay/images/me-dev.svg"
+            alt="user"
+            style="width: 150px; height: 150px; user-select: none"
+            draggable="false"
+          />
+        </div>
+        <div class="info-container">
+          <p class="info text-success">
+            <span class="info-title text-primary">Name : </span>
+            <%= user.first_name %> <%= user.last_name %>
+          </p>
+          <p class="info text-success">
+            <span class="info-title text-primary">Email : </span>
+            <%= user.email %>
+          </p>
+
+          <% const date = new Date(user.date_of_birth); const formattedDate =
+          date.toLocaleDateString('en-IN'); %>
+
+          <p class="info text-success">
+            <span class="info-title text-primary">Date of Birth : </span>
+            <%= formattedDate %>
+          </p>
+          <p class="info text-success">
+            <span class="info-title text-primary">Age : </span>
+            <%= user.age %>
+          </p>
+          <p class="info text-success">
+            <span class="info-title text-primary">Gender : </span>
+            <%= user.gender %>
+          </p>
+          <p class="info text-success">
+            <span class="info-title text-primary">Country : </span>
+            <%= user.country %>
+          </p>
+          <p class="info text-success">
+            <span class="info-title text-primary">State : </span>
+            <%= user.state %>
+          </p>
+          <p class="info text-success">
+            <span class="info-title text-primary">City : </span>
+            <%= user.city %>
+          </p>
+        </div>
+        <div style="text-align: center">
+          <a href="/update" class="btn1 btn btn-info" role="button">Edit</a>
+          <form
+            onsubmit=" return deleteSubmit()"
+            action="/api/user/delete"
+            method="post"
+            style="display: inline-block"
+          >
+            <input type="hidden" name="deluser" value="<%= user._id %>" />
+            <button type="submit" class="btn1 btn btn-danger">Delete</button
+            >&nbsp;
+          </form>
+        </div>
+      </div>
+    </div>
+    <script>
+      function deleteSubmit() {
+        if (confirm("Do you really want to delete this record?")) {
+          alert("Record Deleted successfully!\nPlease Login again!");
+          return true;
+        } else {
+          return false;
+        }
+      }
+    </script>
+  </body>
+</html>

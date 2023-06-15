@@ -136,6 +136,7 @@ app.post("/login", async (req, res) => {
 
   try {
     const foundData = await userModal.findOne({ username: Username });
+    const userDetail = await addUserModel.findOne({ email: req.body.username });
 
     if (foundData) {
       const isMatch = await bcrypt.compare(password, foundData.password);
@@ -146,7 +147,11 @@ app.post("/login", async (req, res) => {
 
       if (isMatch) {
         req.session.currentUser = foundData.username;
-        res.redirect("/registration");
+        if (userDetail) {
+          res.redirect("/user");
+        } else {
+          res.redirect("/registration");
+        }
       } else {
         req.session.logMsg = "Incorrect Password!";
         res.redirect("/");
@@ -157,6 +162,32 @@ app.post("/login", async (req, res) => {
     }
   } catch (err) {
     res.status(400).send(err);
+  }
+});
+
+app.get("/logout", auth, async (req, res) => {
+  try {
+    req.user.tokens = req.user.tokens.filter((currentELe) => {
+      return currentELe.token != req.token;
+    });
+
+    res.clearCookie("jwt");
+    await req.user.save();
+    res.redirect("/");
+  } catch (err) {
+    res.status(401).send(err);
+  }
+});
+
+app.get("/logoutAll", auth, async (req, res) => {
+  try {
+    req.user.tokens = [];
+
+    res.clearCookie("jwt");
+    await req.user.save();
+    res.redirect("/");
+  } catch (err) {
+    res.status(401).send(err);
   }
 });
 
@@ -175,10 +206,22 @@ app.post("/user", async (req, res) => {
 
   try {
     await userDetails.save();
-    res.redirect("/");
+    res.redirect("/user");
   } catch (err) {
     console.log(err);
     res.status(400).send(err);
+  }
+});
+
+app.get("/user", auth, async (req, res) => {
+  const userDetail = await addUserModel.findOne({
+    email: req.session.currentUser,
+  });
+
+  if (req.user) {
+    res.render("UserDetails", { user: userDetail });
+  } else {
+    res.redirect("/");
   }
 });
 
