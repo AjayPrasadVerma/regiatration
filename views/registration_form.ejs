@@ -13,6 +13,76 @@
           <%- include('./partials/form'); %>
         </div>
       </div>
+
+      <script>
+        const countryData = "<%= JSON.stringify(countryData) %>";
+        const decodedData = countryData.replace(/&#34;/g, '"');
+        const allCountry = JSON.parse(decodedData);
+        // console.log(allCountry);
+
+        const countryName = allCountry.map((country) => country.country);
+
+        const allCountryName = [...new Set(countryName)];
+
+        allCountryName.map((country) => {
+          let optionTag = document.createElement("option");
+          optionTag.value = country;
+          optionTag.innerText = country;
+
+          document.getElementById("country").appendChild(optionTag);
+        });
+
+        const state = document.getElementById("state");
+        const country = document.getElementById("country");
+
+        country.addEventListener("change", () => {
+          const allState = [];
+          allCountry.forEach((data) => {
+            removeItem("state-item");
+            removeItem("city-item");
+            if (data.country == country.value) {
+              allState.push(data.state);
+            }
+          });
+
+          allState.map((state) => {
+            let optionTag = document.createElement("option");
+            optionTag.value = state;
+            optionTag.classList = "state-item";
+            optionTag.innerText = state;
+
+            document.getElementById("state").appendChild(optionTag);
+          });
+        });
+
+        state.addEventListener("change", () => {
+          const allCity = [];
+          allCountry.forEach((data) => {
+            removeItem("city-item");
+            if (data.state == state.value) {
+              allCity.push(data.districts);
+            }
+          });
+
+          const city = allCity.flat();
+
+          city.map((city) => {
+            let optionTag = document.createElement("option");
+            optionTag.value = city;
+            optionTag.classList = "city-item";
+            optionTag.innerText = city;
+
+            document.getElementById("city").appendChild(optionTag);
+          });
+        });
+
+        function removeItem(removeItem) {
+          let items = document.querySelectorAll("." + removeItem);
+          items.forEach((item) => {
+            item.remove();
+          });
+        }
+      </script>
     </body>
   </html>
 </DOCTYPE>

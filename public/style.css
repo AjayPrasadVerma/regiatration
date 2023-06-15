@@ -261,8 +261,7 @@ a:hover {
 
 #update_user .form-group .btn:hover,
 #add-user .form-group .btn:hover {
-  background-color: var(--dark);
-  color: var(--border);
+  background-color: #04aa6d;
 }
 
 /* User  details*/

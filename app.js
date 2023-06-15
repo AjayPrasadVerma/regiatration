@@ -9,6 +9,16 @@ const userModal = require("./models/userModel");
 const bcrypt = require("bcryptjs");
 const auth = require("./middleware/auth");
 const path = require("path");
+const {
+  india,
+  england,
+  nepal,
+  russia,
+  sri_lanka,
+  bangladesh,
+  afghanistan,
+  pakistan,
+} = require("./models/regiatrationModel");
 
 const port = process.env.PORT || 1000;
 
@@ -43,7 +53,33 @@ app.get("/signup", (req, res) => {
 });
 
 app.get("/registration", async (req, res) => {
-  res.render("registration_form");
+  try {
+    const indiaStateList = await india.find();
+    const russiaStateList = await russia.find();
+    const nepalStateList = await nepal.find();
+    const sri_lankaStateList = await sri_lanka.find();
+    const englandStateList = await england.find();
+    const bangladeshStateList = await bangladesh.find();
+    const afghanistanStateList = await afghanistan.find();
+    const pakistanStateList = await pakistan.find();
+
+    // console.log(nepalStateList);
+
+    const allCountryState = [
+      ...indiaStateList,
+      ...afghanistanStateList,
+      ...bangladeshStateList,
+      ...russiaStateList,
+      ...nepalStateList,
+      ...sri_lankaStateList,
+      ...pakistanStateList,
+      ...englandStateList,
+    ];
+
+    res.render("registration_form", { countryData: allCountryState });
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 app.post("/signup", async (req, res) => {
