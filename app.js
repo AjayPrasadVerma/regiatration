@@ -225,6 +225,17 @@ app.get("/user", auth, async (req, res) => {
   }
 });
 
+app.post("/api/user/delete", async (req, res) => {
+  try {
+    const removedDocument = await addUserModel.findByIdAndRemove(
+      req.body.deluser
+    );
+    res.redirect("/");
+  } catch (err) {
+    res.status(500).send(err);
+  }
+});
+
 app.listen(port, () => {
   console.log(`we are listening at port number ${port}`);
 });
