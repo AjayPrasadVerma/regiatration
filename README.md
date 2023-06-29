@@ -1,12 +1,12 @@
 # Web App with Node.js, MongoDB, and JWT Authentication
 
-This is a web application built using Node.js, MongoDB, and JWT authentication. It provides a RESTful API for performing CRUD (Create, Read, Update, Delete) operations on user details.
+This is a web application built using Node.js, MongoDB, and JWT authentication. It provides a RESTful API for performing CRUD (Create, Read, Delete) operations on user details.
 
 ## Features
 
 - User authentication using JWT (JSON Web Tokens)
 - User registration and login
-- Create, read, update, and delete user details
+- Create, read, and delete user details
 - Secure API endpoints with authentication middleware
 
 ## Technologies Used
@@ -23,7 +23,7 @@ This is a web application built using Node.js, MongoDB, and JWT authentication. 
 1. Clone this repository to your local machine.
 
    ```shell
-   git clone https://github.com/your-username/your-repo.git
+   git clone https://github.com/AjayPrasadVerma/registration.git
    ```
 
 2. Navigate to the project directory.
